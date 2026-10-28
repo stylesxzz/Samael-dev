@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAMAEL DEV</title>
+<style>
+:root{--bg:#fff;--bg2:#fff;--glass:#fff;--glass2:#fff;--ink:#101c23;--mute:#6b7f88;--line:rgba(16,28,35,.1);--acc:#111827;--acc2:#374151;--btn:#111827;--btnt:#fff;--ghost:rgba(17,24,39,.05);--sh:0 10px 30px rgba(17,24,39,.08);color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:linear-gradient(135deg,#fff 0%,#f7f7f7 100%);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;overflow:hidden}
+.ghost{position:fixed;right:-2vw;bottom:2vh;font-size:22vw;font-weight:800;letter-spacing:-.04em;color:var(--ghost);pointer-events:none;user-select:none}
+.app{display:flex;height:100%;position:relative}
+nav{width:240px;padding:16px;display:flex;flex-direction:column;gap:4px;background:var(--glass);backdrop-filter:blur(18px);border-right:1px solid var(--line);z-index:5;transition:transform .25s}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;padding:6px 8px 16px}
+.orb{width:34px;height:34px;border-radius:50%;flex:none;background:radial-gradient(circle at 32% 28%,#fff 0,rgba(255,255,255,.2) 28%,transparent 30%),radial-gradient(circle at 50% 50%,rgba(56,217,232,.35),rgba(39,245,155,.25) 60%,rgba(16,28,35,.25));border:1px solid var(--line);box-shadow:inset 0 0 10px rgba(255,255,255,.7),var(--sh)}
+nav button{all:unset;cursor:pointer;padding:10px 12px;border-radius:12px;color:var(--mute);display:flex;gap:10px;align-items:center}
+nav button:hover{background:var(--glass2);color:var(--ink)}
+nav button[aria-current=true]{background:var(--glass2);color:var(--ink);font-weight:600;box-shadow:var(--sh)}
+nav button i{font-style:normal;width:18px;text-align:center}
+main{flex:1;min-width:0;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--line)}
+#menu{display:none}
+h1{font-size:18px;flex:1}
+.pill{font-size:12px;padding:4px 10px;border-radius:99px;background:var(--glass2);border:1px solid var(--line);color:var(--mute);white-space:nowrap}
+.pill b{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e8a33d;margin-right:6px}
+.btn{all:unset;cursor:pointer;background:var(--btn);color:var(--btnt);padding:9px 16px;border-radius:99px;font-weight:600;font-size:14px;text-align:center}
+.btn.ghost2{background:var(--glass2);color:var(--ink);border:1px solid var(--line)}
+.btn:focus-visible,nav button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+.view{flex:1;overflow:auto;padding:18px;display:none;position:relative}
+.view.on{display:block}
+.card{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--sh)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.card h3{font-size:15px;margin-bottom:4px}.card p,.mute{color:var(--mute);font-size:13px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chat{display:flex;flex-direction:column;height:100%;max-width:820px;margin:0 auto}
+#log{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:12px}
+.msg{max-width:88%;padding:12px 15px;border-radius:20px;background:var(--glass2);border:1px solid var(--line);white-space:pre-wrap}
+.msg.u{align-self:flex-end;background:var(--btn);color:var(--btnt);border:0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.chip{all:unset;cursor:pointer;font-size:13px;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--glass2)}
+.chip:hover{border-color:var(--acc2)}
+.compose{display:flex;gap:10px;align-items:center;padding:8px;border-radius:99px;background:var(--glass2);border:1px solid var(--line);box-shadow:var(--sh)}
+.compose input{all:unset;flex:1;padding:6px 12px;min-width:0}.compose input[type=file]{display:none!important}
+.go{all:unset;cursor:pointer;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:radial-gradient(circle at 32% 28%,#fff 0,rgba(255,255,255,.25) 30%,transparent 32%),radial-gradient(circle,rgba(56,217,232,.4),rgba(16,28,35,.35));color:var(--ink);border:1px solid var(--line);box-shadow:inset 0 0 10px rgba(255,255,255,.6)}
+.sw{position:relative;width:40px;height:22px;border-radius:99px;background:var(--line);cursor:pointer;flex:none;border:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}
+.sw[aria-checked=true]{background:var(--acc)}.sw[aria-checked=true]::after{left:21px}
+.tag{font-size:12px;padding:2px 9px;border-radius:99px;border:1px solid var(--line);color:var(--mute)}
+.mono,pre,code{font-family:ui-monospace,Menlo,Consolas,monospace}
+pre{background:rgba(16,28,35,.88);color:#cdeee6;padding:12px;border-radius:14px;overflow:auto;font-size:13px;margin:8px 0}
+.list{display:flex;flex-direction:column;gap:10px}
+label{font-size:13px;color:var(--mute);display:block;margin:10px 0 4px}
+input.f,select{all:unset;box-sizing:border-box;width:100%;padding:10px 14px;border-radius:14px;background:var(--glass2);border:1px solid var(--line);color:var(--ink)}
+.notice{font-size:13px;padding:10px 14px;border-radius:14px;background:var(--glass2);border:1px dashed var(--mute);color:var(--mute);margin-bottom:14px}
+@media (max-width:760px){
+nav{position:fixed;inset:0 auto 0 0;transform:translateX(-102%);width:260px;background:var(--glass2)}
+nav.open{transform:none}
+#menu{display:inline-block}
+.pill.hide{display:none}
+.view{padding:12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.msg a.btn{display:inline-block;margin:8px 6px 0 0}.msg img,.msg video{max-width:100%;border-radius:12px;margin-top:8px}details summary{cursor:pointer;color:var(--mute);font-size:13px}pre{white-space:pre-wrap}.pill b{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e8a33d;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="ghost" aria-hidden="true">SAMAEL</div>
+<div class="app"><nav id="nav" aria-label="Navegação principal"></nav><main><header><button class="btn ghost2" id="menu" aria-label="Abrir menu">☰</button><h1 id="title">Workspace</h1><span class="pill" id="st"><b></b><span id="stt">verificando…</span></span></header><div id="views"></div></main></div>
+<script>
+const $=s=>document.querySelector(s),esc=x=>String(x).replace(/[&<>"]/g,c=>"&#"+c.charCodeAt(0)+";");
+const NAV=[["workspace","Workspace","◎"],["agentes","Agentes","✦"],["skills","Skills","❖"],["mcp","Servidores MCP","⇄"],["n8n","Automação n8n","⚡"]];
+const AG=["Arquiteto","Frontend Engineer","Backend Engineer","Database Engineer","QA Engineer","Debugger","Security Reviewer","Code Reviewer"];
+let API=null,H=[],att=[],JOB=null,timer=null,LAST="",LVD=null;
+const api=async(p,o)=>{const r=await fetch("/api"+p,o?{method:o.m,headers:{"Content-Type":"application/json"},body:o.b&&JSON.stringify(o.b)}:undefined);const d=await r.json();if(!r.ok)throw new Error(d.error||r.status);return d};
+$("#nav").innerHTML='<div class="logo"><span class="orb"></span>SAMAEL DEV</div>'+NAV.map(n=>`<button data-v="${n[0]}"><i>${n[2]}</i>${n[1]}</button>`).join("");
+$("#views").style.cssText="flex:1;min-height:0;display:flex;flex-direction:column";
+function mk(id,h){const d=document.createElement("section");d.className="view";d.id="v-"+id;d.innerHTML=h;$("#views").append(d)}
+mk("workspace",`<div class="chat"><div id="log" aria-live="polite"></div><div id="apv"></div><div class="chips" id="ca"></div><form class="compose" id="f"><button type="button" class="go" id="cp" aria-label="Anexar">＋</button><input id="in" placeholder="Descreva o que criar, anexe referências ou cole um comando de skill…" aria-label="Mensagem" autocomplete="off"><button class="go" aria-label="Enviar">➤</button><input type="file" id="cx" multiple hidden accept="image/*,video/*,.txt,.md,.json,.csv,.html,.css,.js,.py,.pdf"></form></div>`);
+mk("agentes",`<div id="apv2"></div><div class="grid" id="ag"></div><h3 style="margin:20px 0 10px">Tarefas</h3><div class="list" id="tk"><p class="mute">Nenhum trabalho em andamento. Peça algo no Workspace.</p></div>`);
+mk("skills",`<div class="notice">Para instalar, cole o comando no chat do Workspace, por exemplo: npx skills add https://github.com/dono/repositorio --skill nome. Skills são conteúdo de terceiros: revise antes de ativar. Só o arquivo SKILL.md é instalado.</div><div class="grid" id="sk"></div>`);
+mk("mcp",`<div class="notice">Conecta o agente a outras ferramentas por MCP (HTTP). Para servidores com login (OAuth), clique em Login OAuth no cartão; se o servidor não registrar clientes sozinho, informe Client ID e secret. Ferramentas que alteram algo pedem a sua aprovação.</div><div class="card" style="max-width:640px"><h3>Adicionar servidor</h3><div class="chips"><button class="chip" data-p="GitHub|https://api.githubcopilot.com/mcp/">GitHub</button><button class="chip" data-p="Vercel|https://mcp.vercel.com">Vercel</button></div><label for="mn">Nome</label><input class="f" id="mn"><label for="mu">URL</label><input class="f" id="mu" placeholder="https://…"><label for="mt">Token (fica só no servidor)</label><input class="f" id="mt" type="password" autocomplete="off"><label for="mi">Client ID (opcional, para OAuth)</label><input class="f" id="mi"><label for="ms">Client secret (opcional)</label><input class="f" id="ms" type="password" autocomplete="off"><div class="row" style="margin-top:12px"><button class="btn" id="ma">Adicionar e conectar</button></div><p class="mute" id="mr" style="margin-top:8px"></p></div><div class="grid" id="ml" style="margin-top:16px"></div>`);
+mk("n8n",`<div class="notice">As ações agendadas são disparadas por webhook em workflows ativos do n8n. Cadastre o nome e o caminho do webhook de cada workflow e peça pelo chat.</div><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))"><div class="card"><h3>Agora na automação</h3><p id="lv0">Nada agendado.</p><div class="list" id="lv"></div></div><div class="card"><h3>Conversa com a automação</h3><div id="lc" style="height:200px;overflow:auto;display:flex;flex-direction:column;gap:8px;margin:8px 0"></div><form class="compose" id="lf"><input id="li" placeholder="Ex.: adie a música em 5 minutos" aria-label="Mensagem" autocomplete="off"><button class="go" aria-label="Enviar">➤</button></form></div></div><div class="card" style="margin-top:16px"><h3>Webhooks do n8n</h3><div class="row" style="margin:8px 0" id="hk"></div><div class="row"><input class="f" id="hn" placeholder="nome (ex.: musica)" style="max-width:200px"><input class="f" id="hp" placeholder="caminho (ex.: tocar-musica)" style="max-width:260px"><button class="btn" id="ha">Cadastrar</button></div></div><div class="card" style="margin-top:16px"><h3>Execuções no n8n</h3><div class="list" id="exl"><p class="mute">n8n não configurado.</p></div></div>`);
+function go(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+id));document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current",b.dataset.v===id));$("#title").textContent=NAV.find(n=>n[0]===id)[1];$("#nav").classList.remove("open")}
+$("#nav").onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.v)};$("#menu").onclick=()=>$("#nav").classList.toggle("open");
+// chat
+const rd=f=>new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result);x.readAsDataURL(f)});
+const shrink=(src,w)=>new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,w/i.width),c=document.createElement("canvas");c.width=i.width*k;c.height=i.height*k;c.getContext("2d").drawImage(i,0,0,c.width,c.height);r(c.toDataURL("image/jpeg",.75))};i.onerror=()=>r(null);i.src=src});
+async function frames(f){const u=URL.createObjectURL(f),v=document.createElement("video");v.muted=true;v.src=u;await new Promise(r=>{v.onloadedmetadata=r;v.onerror=r});const out=[];if(isFinite(v.duration)&&v.videoWidth)for(let k=0;k<4;k++){await new Promise(r=>{v.onseeked=r;v.currentTime=v.duration*(k+.5)/4});const c=document.createElement("canvas"),w=Math.min(768,v.videoWidth);c.width=w;c.height=w*v.videoHeight/v.videoWidth;c.getContext("2d").drawImage(v,0,0,c.width,c.height);out.push(c.toDataURL("image/jpeg",.7))}URL.revokeObjectURL(u);return out}
+async function build(t,fs){const P=[{type:"text",text:t||"(anexos)"}];for(const f of fs){if(f.type.startsWith("image/")){const d=await shrink(await rd(f),1280);if(d)P.push({type:"image_url",image_url:{url:d}})}else if(f.type.startsWith("video/")){const fr=await frames(f);P[0].text+="\n\n[vídeo "+f.name+": "+fr.length+" quadros extraídos como imagens de referência; o áudio não é analisado]";fr.forEach(u=>P.push({type:"image_url",image_url:{url:u}}))}else if(f.type.startsWith("text/")||/\.(md|txt|json|csv|ya?ml|js|py|html|css)$/i.test(f.name))P[0].text+="\n\n[arquivo "+f.name+"]\n"+(await f.text()).slice(0,20000);else P[0].text+="\n\n[anexo "+f.name+": conteúdo não enviado ao modelo]"}return P.length>1?P:P[0].text}
+function lnk(d,n,h){const a=document.createElement("a");a.className="btn ghost2";a.textContent="⬇ "+n;a.href=h;a.download=n;d.append(a)}
+function bubble(t,u,fs,gen,job){const d=document.createElement("div");d.className="msg"+(u?" u":"");const p=document.createElement("div");p.textContent=t;d.append(p);
+for(const f of fs||[]){const url=URL.createObjectURL(f);let e;if(f.type.startsWith("image/")){e=new Image();e.src=url}else if(f.type.startsWith("video/")){e=document.createElement("video");e.src=url;e.controls=true}else{e=document.createElement("div");e.className="tag";e.textContent="📎 "+f.name}d.append(e)}
+for(const [n,tx] of Object.entries(gen||{}))lnk(d,n,URL.createObjectURL(new Blob([tx],{type:"text/plain"})));
+if(job&&job.files.length){job.files.forEach(n=>lnk(d,n,"/api/jobs/"+job.id+"/file?name="+encodeURIComponent(n)));lnk(d,"projeto.zip","/api/jobs/"+job.id+"/zip")}
+$("#log").append(d);$("#log").scrollTop=1e9;return d}
+const SK=/^\s*(npx\s+skills?\s+add|\/skills?\s+(install|add)|skills?\s+(add|install))\s+\S+/i;
+async function send(t){const fs=att;att=[];ra();if(!t&&!fs.length)return;bubble(t,1,fs);
+if(!API){bubble("Sem servidor: rode o server.py (veja o README).");return}
+if(SK.test(t)){try{const d=await api("/skills/install",{m:"POST",b:{command:t}});bubble("Skill “"+d.name+"” instalada e ativada. Ela já vale para os próximos pedidos.");loadSk()}catch(e){bubble("Não consegui instalar: "+e.message)}return}
+const w=bubble("…");
+try{const c=await build(t,fs),d=await api("/chat",{m:"POST",b:{history:H,content:c}});H.push({role:"user",content:t||"(anexos)"},{role:"assistant",content:d.text});w.remove();bubble(d.text,0,[],d.files);if(d.job)watch(d.job)}catch(e){w.firstChild.textContent="Erro: "+e.message}}
+function ra(){$("#ca").innerHTML="";att.forEach((f,i)=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent="📎 "+f.name+" ✕";b.onclick=()=>{att.splice(i,1);ra()};$("#ca").append(b)})}
+$("#cp").onclick=()=>$("#cx").click();$("#cx").onchange=e=>{att.push(...e.target.files);e.target.value="";ra()};
+$(".chat").ondragover=e=>e.preventDefault();$(".chat").ondrop=e=>{e.preventDefault();att.push(...e.dataTransfer.files);ra()};
+$("#f").onsubmit=e=>{e.preventDefault();const t=$("#in").value.trim();$("#in").value="";send(t)};
+// agentes
+function cards(busy){$("#ag").innerHTML=AG.map(a=>`<div class="card"><div class="row" style="justify-content:space-between"><h3>${a}</h3><span class="tag">${busy[a]?"trabalhando":"ocioso"}</span></div><p>${esc(busy[a]||"")}</p></div>`).join("")}
+cards({});
+function watch(id){JOB=id;LAST="";clearInterval(timer);let done=0;const tick=async()=>{try{const j=await api("/jobs/"+id);renderJob(j);if(j.status==="concluído"&&!done){done=1;clearInterval(timer);bubble(j.final||"Concluído.",0,[],{},j)}}catch(e){}};tick();timer=setInterval(tick,1500)}
+function renderJob(j){const s=JSON.stringify(j);if(s===LAST)return;LAST=s;const busy={};j.tasks.forEach(t=>{if(t.status==="executando")busy[t.agent]=t.goal});cards(busy);
+$("#tk").innerHTML=j.tasks.map(t=>`<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(t.id)} · ${esc(t.agent)}</b><span class="tag">${esc(t.status)}</span></div><p>${esc(t.goal)}</p>${t.deps.length?`<p>depende de: ${esc(t.deps.join(", "))}</p>`:""}${t.out?`<details><summary>Resultado</summary><pre>${esc(t.out)}</pre></details>`:""}</div>`).join("");
+const h=j.ap.filter(a=>a.status==="pendente").map(a=>`<div class="card" style="margin-bottom:10px"><b>Aprovar ferramenta?</b><p>${esc(a.server)} → ${esc(a.tool)}</p><pre>${esc(JSON.stringify(a.args,null,1))}</pre><div class="row"><button class="btn" data-ap="${a.id}" data-y="1">Aprovar</button><button class="btn ghost2" data-ap="${a.id}">Rejeitar</button></div></div>`).join("");$("#apv").innerHTML=h;$("#apv2").innerHTML=h}
+// skills e mcp
+async function loadSk(){try{const d=await api("/skills");$("#sk").innerHTML=d.skills.map(k=>`<div class="card"><div class="row" style="justify-content:space-between"><h3>${esc(k.name)}</h3><button class="sw" role="switch" aria-checked="${k.enabled}" data-sk="${esc(k.name)}" aria-label="Ativar ${esc(k.name)}"></button></div><p>${esc(k.description)}</p><button class="btn ghost2" data-rm="${esc(k.name)}" style="margin-top:8px">Remover</button></div>`).join("")||"<p class='mute'>Nenhuma skill instalada.</p>"}catch(e){}}
+async function loadMcp(){try{const d=await api("/mcp");$("#ml").innerHTML=d.servers.map(s=>`<div class="card"><div class="row" style="justify-content:space-between"><h3>${esc(s.name)}</h3><span class="tag">${esc(s.state)}</span></div><p>${esc(s.url)}</p><p>${s.tools.length?s.tools.length+" ferramentas ":""}${esc(s.err)}</p><div class="row" style="margin-top:8px"><button class="btn ghost2" data-mc="${s.id}">Conectar</button><button class="btn ghost2" data-mo="${s.id}">Login OAuth</button><button class="btn ghost2" data-md="${s.id}">Remover</button></div></div>`).join("")||"<p class='mute'>Nenhum servidor.</p>"}catch(e){}}
+$("#ma").onclick=async()=>{$("#mr").textContent="Conectando…";try{const d=await api("/mcp",{m:"POST",b:{name:$("#mn").value,url:$("#mu").value,token:$("#mt").value,client_id:$("#mi").value,client_secret:$("#ms").value}});$("#mt").value=$("#ms").value="";$("#mr").textContent="Estado: "+d.state}catch(e){$("#mr").textContent="Erro: "+e.message}loadMcp()};
+// n8n ao vivo
+async function pollLive(){try{const d=await api("/live");LVD=d;LVD.off=d.now-Date.now()/1000;$("#hk").innerHTML=Object.entries(d.hooks).map(([k,v])=>`<span class="tag">${esc(k)} → ${esc(v)} <button class="chip" data-hd="${esc(k)}" aria-label="Remover ${esc(k)}">✕</button></span>`).join(" ")||"<span class='mute'>Nenhum webhook cadastrado.</span>";paint()}catch(e){}}
+function paint(){if(!LVD)return;const n=Date.now()/1000+LVD.off,its=LVD.items.slice(-12).reverse();$("#lv0").hidden=its.length>0;$("#lv").innerHTML=its.map(i=>{const r=Math.max(0,Math.round(i.at-n)),t=i.status==="agendado"?" · "+Math.floor(r/60)+":"+String(r%60).padStart(2,"0"):"";return `<div class="row" style="justify-content:space-between"><div><b>${esc(i.title)}</b><br><span class="mute">webhook ${esc(i.path)}${i.note?" · "+esc(i.note):""}</span></div><div class="row"><span class="tag">${esc(i.status)}${t}</span>${i.status==="agendado"?`<button class="btn ghost2" data-lc="${i.id}">Cancelar</button>`:""}</div></div>`}).join("")}
+setInterval(paint,1000);
+function lm(t,u){const d=document.createElement("div");d.className="msg"+(u?" u":"");d.textContent=t;$("#lc").append(d);$("#lc").scrollTop=1e9}
+$("#lf").onsubmit=async e=>{e.preventDefault();const t=$("#li").value.trim();if(!t)return;$("#li").value="";lm(t,1);try{lm((await api("/live/chat",{m:"POST",b:{message:t}})).reply)}catch(x){lm("Erro: "+x.message)}pollLive()};
+$("#ha").onclick=async()=>{try{await api("/live/hooks",{m:"POST",b:{name:$("#hn").value.trim(),path:$("#hp").value.trim()}});$("#hn").value=$("#hp").value=""}catch(e){alert(e.message)}pollLive()};
+async function pollEx(){try{const d=await api("/n8n/executions");$("#exl").innerHTML=(d.data||[]).map(x=>`<div class="row" style="justify-content:space-between"><span>#${esc(x.id)} · workflow ${esc(x.workflowId)}</span><span class="tag">${esc(x.status||"?")}</span></div>`).join("")||"<p class='mute'>Nenhuma execução recente.</p>"}catch(e){$("#exl").textContent="n8n indisponível: "+e.message}}
+// cliques
+document.addEventListener("click",async e=>{const t=e.target,c=s=>t.closest(s);let b;
+if(b=c("[data-ap]"))await api("/jobs/"+JOB+"/approve",{m:"POST",b:{aid:b.dataset.ap,approve:!!b.dataset.y}}).catch(()=>{});
+else if(b=c("[data-sk]")){await api("/skills/"+b.dataset.sk+"/toggle",{m:"POST",b:{}});loadSk()}
+else if(b=c("[data-rm]")){await api("/skills/"+b.dataset.rm,{m:"DELETE"});loadSk()}
+else if(b=c("[data-mc]")){await api("/mcp/"+b.dataset.mc+"/connect",{m:"POST",b:{}}).catch(()=>{});loadMcp()}
+else if(b=c("[data-mo]")){try{const d=await api("/mcp/"+b.dataset.mo+"/oauth",{m:"POST",b:{}});if(!window.open(d.url,"_blank"))location.href=d.url;let k=0;const iv=setInterval(()=>{loadMcp();if(++k>45)clearInterval(iv)},2000)}catch(x){alert(x.message)}}
+else if(b=c("[data-md]")){await api("/mcp/"+b.dataset.md,{m:"DELETE"});loadMcp()}
+else if(b=c("[data-p]")){const [n,u]=b.dataset.p.split("|");$("#mn").value=n;$("#mu").value=u}
+else if(b=c("[data-lc]")){await api("/live/cancel",{m:"POST",b:{id:b.dataset.lc}});pollLive()}
+else if(b=c("[data-hd]")){await api("/live/hooks/"+b.dataset.hd,{m:"DELETE"});pollLive()}});
+bubble("Olá! Descreva o que quer criar. Você pode anexar imagens e vídeos como referência. Para instalar uma skill, cole o comando aqui no chat.");
+go("workspace");
+fetch("/api/health").then(r=>r.json()).then(h=>{API=h;$("#stt").textContent="IA "+(h.ia?"conectada":"sem chave")+" · n8n "+(h.n8n?"conectado":"não configurado");loadSk();loadMcp();pollLive();setInterval(pollLive,2500);if(h.n8n){pollEx();setInterval(pollEx,5000)}}).catch(()=>{$("#stt").textContent="sem servidor (demonstração)"});
+</script>
+</body>
+</html>
