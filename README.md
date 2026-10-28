@@ -1,19 +1,24 @@
 # SAMAEL DEV
 
-Workspace de IA para criar sites, apps e automações. Interface monocromática branca, preta e cinza no navegador + servidor local em Python.
+Artefatos de revisão do projeto SAMAEL DEV: relatório de auditoria, resumo das correções verificadas e referências visuais monocromáticas em branco, preto e cinza.
 
 ![SAMAEL DEV — capa](public/images/samael-dev-cover.svg)
 
-## Prévia da interface
+## Prévia visual
 
 ![Prévia monocromática do workspace](public/images/samael-dev-dashboard.svg)
 
-## Como rodar
+## Arquivos neste repositório
 
-1. Instale Python 3.9+.
-2. Copie `.env.example` para `.env` e configure `NVIDIA_API_KEY` e `NVIDIA_MODEL`.
-3. Linux/Termux: `set -a; . ./.env; set +a; python3 server.py`.
-4. Abra http://127.0.0.1:8000.
-5. Execute os testes com `python3 tests/smoke_test.py`.
+- [Auditoria técnica](AUDIT.md)
+- [Correções revisadas](REVIEWED_FIXES.md)
+- [Capa SVG](public/images/samael-dev-cover.svg)
+- [Prévia do dashboard SVG](public/images/samael-dev-dashboard.svg)
 
-Veja as instruções completas e a licença MIT nos arquivos do repositório.
+## Validação realizada no pacote de origem
+
+- `python3 -m py_compile server.py`
+- `node --check` no script extraído de `public/index.html`
+- `python3 tests/smoke_test.py`
+
+Todas as verificações acima passaram no pacote corrigido. **A árvore completa do código-fonte ainda não foi espelhada neste repositório**; o ZIP/TAR corrigido está disponível no arquivo anexado à conversa. As imagens são ilustrações vetoriais de referência, não capturas reais de tela.
