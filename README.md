@@ -1,253 +1,342 @@
 # SAMAEL DEV
-### Workspace de engenharia de software com IA, agentes especializados e automação
+
+**Workspace de engenharia de software com IA, agentes especializados e automação de fluxos.**
 
 ![SAMAEL DEV — capa monocromática](public/images/samael-dev-cover.svg)
 
-O **SAMAEL DEV** é um workspace web para apoiar tarefas de desenvolvimento de software e automação por meio da API NVIDIA NIM. A interface utiliza uma identidade visual monocromática — branco, preto e tons de cinza — e pode ser acessada pelo navegador em computadores e dispositivos Android.
+O **SAMAEL DEV** é um projeto de workspace web voltado ao desenvolvimento de software assistido por inteligência artificial. A proposta combina uma interface responsiva, orquestração de agentes especializados, integração com a API NVIDIA NIM, ferramentas compatíveis com MCP e automações por meio do n8n.
 
-> **Estado deste repositório:** neste momento, ele contém a documentação, o relatório de auditoria e as referências visuais. O código-fonte executável (`server.py`, `public/index.html` e `tests/`) ainda não foi publicado na árvore principal. Por isso, os comandos abaixo descrevem como preparar o ambiente para o pacote-fonte do SAMAEL DEV; eles só funcionarão depois que esse pacote estiver presente no diretório.
+A interface foi planejada para uso em computadores e dispositivos Android por meio de um navegador moderno.
+
+> **Status do repositório:** a versão atualmente publicada contém documentação, relatório de auditoria e referências visuais. Os arquivos executáveis principais, como `server.py`, `public/index.html` e a suíte `tests/`, ainda não estão disponíveis na árvore principal. Portanto, clonar este repositório baixa a documentação e os recursos publicados, mas **não instala uma versão executável do SAMAEL DEV**. Os passos de inicialização da aplicação só poderão ser usados quando o código-fonte correspondente for incluído.
 
 ---
 
-## Índice
+## Sumário
 
 - [Visão geral](#visão-geral)
-- [Funcionalidades](#funcionalidades)
+- [Recursos planejados](#recursos-planejados)
 - [Arquitetura e tecnologias](#arquitetura-e-tecnologias)
 - [Requisitos](#requisitos)
+- [Baixar o repositório](#baixar-o-repositório)
 - [Instalação no Termux (Android)](#instalação-no-termux-android)
 - [Instalação no Windows](#instalação-no-windows)
 - [Instalação no Kali Linux](#instalação-no-kali-linux)
 - [Configuração da NVIDIA API](#configuração-da-nvidia-api)
-- [Integração com n8n](#integração-com-n8n)
-- [Segurança e boas práticas](#segurança-e-boas-práticas)
-- [Limitações conhecidas](#limitações-conhecidas)
-- [Documentação e imagens](#documentação-e-imagens)
+- [Instalação do n8n com Docker](#instalação-do-n8n-com-docker)
+- [Conectar o SAMAEL DEV ao n8n](#conectar-o-samael-dev-ao-n8n)
+- [Segurança](#segurança)
+- [Limitações e estado atual](#limitações-e-estado-atual)
+- [Documentação e referências visuais](#documentação-e-referências-visuais)
 - [Licença](#licença)
 
 ## Visão geral
 
-O SAMAEL DEV foi pensado para centralizar a interação com um modelo de IA, organizar tarefas de programação em agentes especializados, conectar ferramentas compatíveis com MCP e acionar automações do n8n. O servidor é implementado em Python usando a biblioteca padrão, enquanto a interface web é servida localmente e pode ser aberta em um navegador moderno.
+O SAMAEL DEV foi concebido para reunir em um único ambiente as tarefas de programação assistida por IA, a coordenação de agentes especializados e a integração com ferramentas externas. A inferência de IA é realizada por meio da API NVIDIA NIM; o servidor da aplicação, quando disponibilizado, é executado no computador ou servidor escolhido pelo usuário.
 
-O modelo é acessado remotamente pela NVIDIA API; a aplicação web e a lógica de orquestração são executadas no dispositivo ou computador onde o servidor estiver iniciado.
+O projeto também prevê integração com servidores MCP e com workflows do n8n, permitindo conectar ferramentas e automatizar tarefas de acordo com as permissões configuradas.
 
-## Funcionalidades
+## Recursos planejados
 
-| Área | O que oferece |
+| Área | Descrição |
 |---|---|
-| **Workspace de IA** | Chat para descrever tarefas, pedir ajuda técnica e coordenar o trabalho do orquestrador. |
-| **Criação de arquivos** | A IA pode devolver arquivos gerados e organizá-los em um pacote ZIP para download. |
-| **Entrada multimodal** | Suporte a anexos de imagem, vídeo e texto; vídeos são representados por até quatro quadros de referência. O áudio do vídeo não é analisado. |
-| **Agentes especializados** | O orquestrador distribui o pedido entre até oito agentes. Tarefas independentes podem ser executadas em paralelo, com limite de concorrência. |
-| **Dependências de tarefas** | Tarefas dependentes aguardam a conclusão das etapas necessárias; o progresso pode ser acompanhado na interface. |
-| **Catálogo de Skills** | Instala Skills a partir de repositórios GitHub ou de um arquivo `SKILL.md`. O conteúdo é carregado como orientação para os agentes e deve ser revisado antes do uso. |
-| **Servidores MCP** | Conexão com servidores MCP via HTTP, incluindo ferramentas compatíveis de provedores como GitHub e Vercel. |
-| **Aprovação de ferramentas** | Ferramentas identificadas como somente leitura podem ser executadas sem confirmação; operações que alteram dados solicitam aprovação na interface. |
-| **Autenticação OAuth para MCP** | Quando o servidor remoto permite, a aplicação descobre os endpoints de autorização, usa PKCE e gerencia a renovação de tokens. Alguns servidores exigem Client ID e/ou Client Secret informados pelo usuário. |
-| **Automação n8n** | Integração com webhooks de workflows ativos para agendar, adiar, antecipar, cancelar ou substituir ações. |
-| **Persistência local** | Configurações e dados operacionais são guardados no diretório de dados configurado no servidor. |
-| **Interface responsiva** | Interface web utilizável em navegador desktop ou móvel, incluindo Android. |
+| Workspace de IA | Interface de conversação para descrever tarefas técnicas e orientar o orquestrador. |
+| Geração de arquivos | Preparação de arquivos gerados pela IA e empacotamento para download, conforme o código implementado. |
+| Entrada multimodal | Tratamento de anexos de imagem, vídeo e texto; o comportamento depende dos recursos implementados e do modelo utilizado. |
+| Agentes especializados | Orquestração de até oito agentes, com possibilidade de executar tarefas independentes em paralelo. |
+| Dependências de tarefas | Organização de etapas que dependem da conclusão de outras tarefas. |
+| Catálogo de Skills | Importação de Skills de repositórios Git ou arquivos `SKILL.md`; revise o conteúdo antes de utilizá-lo. |
+| Servidores MCP | Integração planejada com servidores MCP compatíveis, incluindo ferramentas externas autorizadas. |
+| Aprovação de ferramentas | Fluxo de confirmação para operações que possam alterar dados ou executar ações sensíveis, conforme a implementação. |
+| Integração com n8n | Conexão com workflows e webhooks configurados pelo usuário. |
+| Persistência | Armazenamento de configurações e dados operacionais no ambiente de execução, quando disponível. |
+| Interface responsiva | Experiência web planejada para navegadores desktop e móveis. |
 
-### Prévia visual
+### Referência visual
 
 ![Referência monocromática do dashboard SAMAEL DEV](public/images/samael-dev-dashboard.svg)
 
-As imagens acima são **ilustrações vetoriais de referência**, não capturas de tela reais da aplicação em execução.
+As imagens são **ilustrações vetoriais de referência**, não capturas de tela de uma aplicação executável.
 
 ## Arquitetura e tecnologias
 
-- **Interface:** HTML, CSS e JavaScript no navegador.
-- **Servidor:** Python 3 e biblioteca padrão.
-- **IA:** NVIDIA NIM / API compatível com o formato de chat completions.
-- **Ferramentas externas:** servidores MCP por HTTP.
-- **Automação:** n8n por API e webhooks.
-- **Armazenamento:** arquivos locais para dados, Skills e configurações de execução.
-- **Acesso:** navegador em `http://127.0.0.1:8000` por padrão.
+- **Interface planejada:** HTML, CSS e JavaScript.
+- **Servidor planejado:** Python 3.
+- **Provedor de IA:** NVIDIA NIM / API compatível com chat completions.
+- **Ferramentas externas:** servidores MCP compatíveis.
+- **Automação:** n8n por meio de API e webhooks.
+- **Endereço local previsto:** `http://127.0.0.1:8000`.
+
+Essas tecnologias descrevem a arquitetura prevista; a presença e o funcionamento de cada recurso dependem da publicação do código-fonte correspondente.
 
 ## Requisitos
 
-- Python **3.9 ou superior**.
-- Navegador moderno.
-- Chave de API NVIDIA e identificador de modelo válido para usar a IA.
-- Opcional: instância n8n com API habilitada e workflows com webhooks ativos.
-- Opcional: servidores MCP compatíveis e credenciais correspondentes.
+Para consultar e editar a documentação:
 
-## Instalação no Termux (Android)
+- Git (opcional, para clonar o repositório).
+- Um navegador ou editor de texto.
 
-Abra o Termux e execute os comandos separadamente:
+Para executar a aplicação quando o código-fonte estiver disponível:
 
-```bash
-pkg update && pkg upgrade -y
-pkg install python git nano -y
-python --version
-```
+- Python 3.9 ou superior, conforme os requisitos do código.
+- Uma chave NVIDIA API e um identificador de modelo compatível.
+- Opcionalmente, uma instância n8n e servidores MCP configurados.
+- Para executar o n8n com Docker, Docker Engine e Docker Compose (ou suporte equivalente do Docker Desktop).
 
-Entre na pasta onde o **código-fonte do SAMAEL DEV** foi colocado. Se o pacote estiver em Downloads, por exemplo:
+## Baixar o repositório
 
-```bash
-termux-setup-storage
-cd ~/storage/downloads
-```
+Os comandos abaixo baixam o repositório diretamente do GitHub. Eles **não dependem de um ZIP previamente salvo no celular**.
 
-Extraia o pacote ZIP, caso necessário, e entre na pasta que contém `server.py`:
+### Termux, Kali Linux ou outro terminal Linux
 
 ```bash
-unzip samael-dev.zip
-cd samael-dev
+pkg install git -y  # Termux; no Kali/Debian, use: sudo apt install git
+git clone https://github.com/stylesxzz/Samael-dev.git
+cd Samael-dev
+ls -la
 ```
 
-Prepare as variáveis de ambiente:
-
-```bash
-cp .env.example .env
-nano .env
-```
-
-Preencha pelo menos `NVIDIA_API_KEY` e `NVIDIA_MODEL`. Salve no nano com **Ctrl+O**, Enter e saia com **Ctrl+X**.
-
-Carregue as variáveis e inicie o servidor:
-
-```bash
-set -a
-. ./.env
-set +a
-python server.py
-```
-
-Abra no navegador do Android:
-
-```text
-http://127.0.0.1:8000
-```
-
-Para encerrar, volte ao Termux e pressione **Ctrl+C**.
-
-## Instalação no Windows
-
-Instale o Python 3.9 ou superior pelo site oficial e marque **Add Python to PATH** durante a instalação. Abra o PowerShell e confirme:
-
-```powershell
-py --version
-```
-
-Entre na pasta do projeto — aquela que contém `server.py` — e copie o arquivo de configuração:
-
-```powershell
-Copy-Item .env.example .env
-notepad .env
-```
-
-Edite `.env` e preencha `NVIDIA_API_KEY` e `NVIDIA_MODEL`. O servidor Python não carrega automaticamente arquivos `.env`; defina as variáveis na sessão atual do PowerShell antes de iniciá-lo:
-
-```powershell
-$env:NVIDIA_API_KEY = "SUA_CHAVE_NVIDIA"
-$env:NVIDIA_MODEL = "ID_DO_MODELO"
-$env:NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
-$env:HOST = "127.0.0.1"
-$env:PORT = "8000"
-python server.py
-```
-
-Abra o navegador em:
-
-```text
-http://127.0.0.1:8000
-```
-
-Para encerrar o servidor, use **Ctrl+C** no PowerShell. As variáveis definidas com `$env:` valem para a sessão atual do terminal.
-
-## Instalação no Kali Linux
-
-Atualize os pacotes e instale os requisitos:
+No Kali Linux ou Debian, caso o Git ainda não esteja instalado:
 
 ```bash
 sudo apt update
-sudo apt install -y python3 git unzip nano
-python3 --version
+sudo apt install -y git
+git clone https://github.com/stylesxzz/Samael-dev.git
+cd Samael-dev
 ```
 
-Entre na pasta extraída do projeto, onde `server.py` está localizado. Se você tiver o pacote ZIP:
+### Windows PowerShell
+
+```powershell
+git --version
+git clone https://github.com/stylesxzz/Samael-dev.git
+Set-Location Samael-dev
+Get-ChildItem
+```
+
+Se o comando `git --version` não for reconhecido, instale o Git para Windows e abra um novo PowerShell.
+
+## Instalação no Termux (Android)
+
+1. Instale e abra o Termux.
+2. Instale o Git e o Python, caso precise preparar o ambiente para desenvolvimento:
 
 ```bash
-unzip samael-dev.zip
-cd samael-dev
+pkg update
+pkg upgrade -y
+pkg install -y git python nano
 ```
 
-Configure o ambiente:
+3. Clone o repositório e entre na pasta criada pelo Git:
 
 ```bash
-cp .env.example .env
-nano .env
+git clone https://github.com/stylesxzz/Samael-dev.git
+cd Samael-dev
+ls -la
 ```
 
-Preencha `NVIDIA_API_KEY` e `NVIDIA_MODEL`, salve e inicie:
+**Importante:** neste momento, o repositório não contém o servidor e a interface executáveis. Por isso, não execute `python server.py` nem espere que o endereço local abra a aplicação antes de o código-fonte ser publicado.
+
+O Termux, por si só, também não oferece um Docker Engine completo pronto para uso. Para executar o n8n com Docker, utilize um computador Linux/Windows com Docker ou um servidor remoto com Docker instalado. Depois, acesse a URL desse servidor a partir do navegador do Android.
+
+## Instalação no Windows
+
+1. Instale o Git para Windows.
+2. Instale Python 3.9 ou superior se for preparar um ambiente de desenvolvimento.
+3. Abra o PowerShell e clone o repositório:
+
+```powershell
+git clone https://github.com/stylesxzz/Samael-dev.git
+Set-Location Samael-dev
+Get-ChildItem
+```
+
+O código executável principal ainda não está publicado. Quando ele estiver disponível, siga os requisitos e o comando de inicialização documentados para essa versão. Para executar o n8n localmente com Docker, instale o Docker Desktop e habilite o backend WSL 2, se aplicável.
+
+## Instalação no Kali Linux
+
+Instale as ferramentas básicas e clone o projeto:
 
 ```bash
-set -a
-. ./.env
-set +a
-python3 server.py
+sudo apt update
+sudo apt install -y git python3 python3-venv python3-pip
+git clone https://github.com/stylesxzz/Samael-dev.git
+cd Samael-dev
+ls -la
 ```
 
-Acesse no navegador:
-
-```text
-http://127.0.0.1:8000
-```
-
-Se o Kali estiver em uma máquina virtual, o endereço `127.0.0.1` corresponde à própria máquina virtual. Para acessar de outro dispositivo, será necessário configurar a rede e a exposição do serviço com autenticação e regras de firewall apropriadas; não exponha o servidor diretamente à internet sem proteção.
+Esses passos preparam o ambiente e baixam os arquivos publicados. A aplicação SAMAEL DEV não poderá ser iniciada até que o código-fonte executável seja adicionado ao repositório.
 
 ## Configuração da NVIDIA API
 
-1. Crie ou acesse sua conta no portal NVIDIA Developer.
-2. Gere uma chave de API para o serviço/modelo que pretende utilizar.
-3. Escolha um modelo disponível na sua conta e copie o identificador exato.
-4. Configure as variáveis:
+Quando o código da aplicação estiver disponível, a integração deverá utilizar uma chave válida e um identificador de modelo habilitado para a sua conta NVIDIA. O formato de configuração previsto é:
 
 ```dotenv
-NVIDIA_API_KEY=sua_chave_aqui
-NVIDIA_MODEL=id_exato_do_modelo
+NVIDIA_API_KEY=COLOQUE_SUA_CHAVE_AQUI
+NVIDIA_MODEL=ID_EXATO_DO_MODELO
 NVIDIA_BASE_URL=https://integrate.api.nvidia.com/v1
 ```
 
-A aplicação usa `NVIDIA_API_KEY` para autenticar as requisições e `NVIDIA_MODEL` para selecionar o modelo. Disponibilidade, limites, nomes de modelos e custos dependem das condições atuais da NVIDIA. Nunca publique uma chave real em commits, capturas de tela ou mensagens de suporte.
+Os nomes acima representam as variáveis previstas na documentação; confirme que correspondem ao código da versão instalada antes de utilizá-las. A disponibilidade de modelos, limites e condições de uso é definida pela NVIDIA.
 
-## Integração com n8n
+**Nunca** inclua chaves reais no README, em commits, capturas de tela ou registros públicos.
 
-A integração é opcional. Para ativá-la, configure:
+## Instalação do n8n com Docker
+
+Esta seção instala o n8n separadamente do SAMAEL DEV. O Docker deve estar instalado e em execução na máquina ou servidor escolhido. Consulte a [documentação oficial do Docker](https://docs.docker.com/get-started/get-docker/) para instalar o mecanismo adequado ao seu sistema.
+
+### 1. Entrar na conta Docker Hub
+
+No terminal, execute:
+
+```bash
+docker login
+```
+
+O Docker Hub normalmente oferece um fluxo de autenticação pelo navegador e um código temporário. Abra o endereço indicado pelo terminal, entre na sua conta Docker e confirme o código. Não compartilhe esse código com outras pessoas.
+
+Verifique se o Docker está disponível:
+
+```bash
+docker --version
+docker compose version
+```
+
+Se o comando `docker` não existir ou o daemon não estiver ativo, conclua a instalação e inicie o Docker antes de continuar. Fazer login não instala o Docker Engine.
+
+### 2. Baixar a imagem oficial do n8n
+
+```bash
+docker pull n8nio/n8n
+```
+
+### 3. Criar um volume persistente
+
+O volume mantém os dados do n8n entre reinicializações e recriações do contêiner.
+
+```bash
+docker volume create n8n_data
+```
+
+### 4. Iniciar o n8n
+
+```bash
+docker run -d \
+  --name n8n \
+  --restart unless-stopped \
+  -p 127.0.0.1:5678:5678 \
+  -e GENERIC_TIMEZONE=America/Sao_Paulo \
+  -e TZ=America/Sao_Paulo \
+  -v n8n_data:/home/node/.n8n \
+  n8nio/n8n
+```
+
+Abra no navegador da própria máquina:
+
+```text
+http://localhost:5678
+```
+
+Siga a tela inicial do n8n para criar a conta de proprietário e configurar o acesso. O mapeamento da porta para `127.0.0.1` limita o acesso ao próprio computador; é uma opção mais segura para uso local.
+
+### 5. Verificar o contêiner
+
+```bash
+docker ps
+docker logs -f n8n
+```
+
+Para sair da visualização dos logs, pressione `Ctrl+C`. Isso não interrompe o contêiner.
+
+### 6. Comandos úteis para administrar o n8n
+
+```bash
+# Parar
+docker stop n8n
+
+# Iniciar novamente
+docker start n8n
+
+# Reiniciar
+docker restart n8n
+
+# Ver logs recentes
+docker logs --tail 100 n8n
+
+# Atualizar a imagem
+docker pull n8nio/n8n
+docker stop n8n
+docker rm n8n
+docker run -d \
+  --name n8n \
+  --restart unless-stopped \
+  -p 127.0.0.1:5678:5678 \
+  -e GENERIC_TIMEZONE=America/Sao_Paulo \
+  -e TZ=America/Sao_Paulo \
+  -v n8n_data:/home/node/.n8n \
+  n8nio/n8n
+```
+
+O comando de atualização recria o contêiner, mas preserva o volume `n8n_data`. Antes de atualizar uma instância importante, faça backup dos dados e confira as notas de versão do n8n.
+
+### Observações sobre acesso remoto
+
+- Em um servidor remoto, `localhost` no navegador do celular aponta para o próprio celular, não para o servidor.
+- Para acessar uma instância remota, configure um domínio ou endereço do servidor e uma conexão protegida por HTTPS, autenticação e firewall.
+- Não exponha a porta 5678 diretamente à internet sem controles de segurança.
+- O login do Docker Hub autentica o cliente no registro de imagens; ele não configura, por si só, o acesso remoto ao n8n.
+
+Consulte também a [documentação oficial do n8n para Docker](https://docs.n8n.io/hosting/installation/docker/).
+
+## Conectar o SAMAEL DEV ao n8n
+
+A integração depende de o código executável do SAMAEL DEV ser publicado e de a versão implementada oferecer suporte às variáveis e chamadas necessárias. O formato previsto na documentação é:
 
 ```dotenv
 N8N_URL=http://localhost:5678
-N8N_API_KEY=sua_chave_n8n
+N8N_API_KEY=COLOQUE_SUA_CHAVE_N8N_AQUI
 ```
 
-Crie e ative os workflows no n8n, configure os webhooks necessários e teste-os diretamente no n8n antes de usar a agenda do SAMAEL DEV. O agendamento local só dispara enquanto o servidor SAMAEL DEV estiver em execução; ele não é um serviço de execução em segundo plano independente.
+Esses valores são exemplos, não uma garantia de que a integração já esteja operacional no repositório atual.
 
-## Segurança e boas práticas
+Para configurar a integração quando o recurso estiver disponível:
 
-- Mantenha `.env` fora do Git. Nunca compartilhe tokens, chaves ou segredos OAuth.
-- Use o endereço local `127.0.0.1` por padrão.
-- Antes de disponibilizar a aplicação na rede, configure autenticação, HTTPS, firewall e controles de acesso adequados.
-- Revise Skills de terceiros antes de instalá-las. O conteúdo de uma Skill é dado de referência, não uma política de segurança.
-- Confirme cuidadosamente operações que alteram dados em ferramentas MCP e automações.
-- Use credenciais com o menor privilégio possível e revogue tokens que não forem mais necessários.
-- Faça cópias de segurança dos dados locais importantes.
+1. Inicie o n8n e entre na interface web.
+2. Crie um workflow e configure o gatilho ou webhook necessário.
+3. Ative o workflow e teste a URL do webhook.
+4. Crie uma chave de API nas configurações do n8n, se a integração utilizar a API autenticada.
+5. Configure a URL e a credencial no ambiente do SAMAEL DEV, sem publicá-las no Git.
+6. Teste primeiro com uma automação não destrutiva.
 
-## Limitações conhecidas
+Se o SAMAEL DEV estiver em outro contêiner, `localhost:5678` geralmente não apontará para o contêiner do n8n. Nesse caso, configure ambos na mesma rede Docker e use o nome do serviço/contêiner como hostname, ou utilize o endereço correto do servidor. Não use a URL de loopback sem confirmar onde cada processo está executando.
 
-- A geração de imagem é limitada a saída vetorial SVG; não é um gerador de imagens rasterizado.
-- A aplicação não gera vídeos e não analisa a faixa de áudio dos vídeos anexados.
-- As respostas do modelo são apresentadas integralmente, sem streaming de tokens.
-- A agenda local depende de o servidor continuar ligado.
-- Recursos disponíveis variam conforme o modelo NVIDIA escolhido e as permissões dos serviços externos.
+## Segurança
 
-## Documentação e imagens
+- Mantenha arquivos de segredos, como `.env`, fora do controle de versão.
+- Não compartilhe chaves NVIDIA, tokens de API, códigos temporários de login ou credenciais OAuth.
+- Prefira credenciais com privilégios mínimos e revogue as que não forem mais necessárias.
+- Revise Skills e ferramentas MCP de terceiros antes de habilitá-las.
+- Exija aprovação para operações que alterem arquivos, dados ou sistemas.
+- Antes de disponibilizar serviços na rede, configure HTTPS, autenticação, firewall e regras de acesso.
+- Faça backups regulares dos volumes e dados persistentes do n8n.
+
+## Limitações e estado atual
+
+- O repositório público ainda não inclui os arquivos executáveis principais da aplicação.
+- As imagens publicadas são referências visuais, não capturas de tela reais.
+- Os recursos descritos como planejados dependem da publicação e validação do código correspondente.
+- A integração com n8n requer uma instância funcional e workflows configurados.
+- Os recursos disponíveis pela API dependem do modelo NVIDIA e das permissões da conta.
+
+## Documentação e referências visuais
 
 - [Relatório de auditoria técnica](AUDIT.md)
 - [Resumo das correções revisadas](REVIEWED_FIXES.md)
 - [Capa SVG](public/images/samael-dev-cover.svg)
 - [Referência do dashboard SVG](public/images/samael-dev-dashboard.svg)
+- [Documentação oficial do Docker](https://docs.docker.com/)
+- [Documentação oficial do n8n](https://docs.n8n.io/)
 
 ## Licença
 
-Este projeto é distribuído sob a licença **MIT**. Consulte o arquivo [LICENSE](LICENSE) para ver o texto integral da licença, incluindo permissões, condições e isenção de garantia.
+Este projeto é distribuído sob a licença **MIT**. Consulte o arquivo [LICENSE](LICENSE) para ler os termos completos, incluindo permissões, condições e isenção de garantia.
